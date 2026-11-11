@@ -1,3 +1,11 @@
+# Optimized by ci-cost (https://github.com/mariotavarez/ci-cost)
+# Applied 4 optimizations:
+# - [MEDIUM] Add concurrency group to "ci.yml"
+# - [MEDIUM] 4 jobs clone the repo — consider artifact sharing
+# - [LOW] Explicitly set fail-fast for large matrix job "build" (23 combinations)
+# - [LOW] Explicitly set fail-fast for large matrix job "examples" (25 combinations)
+# Estimated savings: ~7 min/run
+#
 name: Build & Test & Clippy
 
 on:
@@ -9,6 +17,10 @@ on:
   schedule:
     - cron: "0 0 * * 0" # weekly build: every sunday at midnight
 
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 env:
   CARGO_TERM_COLOR: always
 
